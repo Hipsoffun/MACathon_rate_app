@@ -1,20 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import StarRating from './StarRating';
+import { useNavigation } from '@react-navigation/native';
 
 const PostItem = ({ post }) => {
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.postItem}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('PostItemScreen', { post })}
+      style={styles.postItem}
+    >
       <Text style={styles.postTitle}>{post.title}</Text>
       <View style={styles.ratingContainer}>
         <StarRating rating={post.rating} onRatingChange={null} />
       </View>
-
       <Text style={styles.postContent}>{post.content}</Text>
       <Text style={styles.postDate}>
         {new Date(post.createdAt).toLocaleString()}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
