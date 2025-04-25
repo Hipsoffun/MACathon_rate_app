@@ -7,9 +7,10 @@ import StarRating from '../components/StarRating';
 import { AntDesign } from '@expo/vector-icons';
 
 const PostItemScreen = ({ route }) => {
-  const { post } = route.params;
+  const [post,setPost] = useState(route.params.post);
   const [rating, setRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [numRating, setNumRating] = useState(1);
   const scrollViewRef = useRef();
   const [commentText, setCommentText] = useState('');
   const [comments, setComments] = useState([
@@ -21,6 +22,13 @@ const PostItemScreen = ({ route }) => {
 
   const handleSubmit = () => {
     setSubmitted(true);
+    
+    const newRating = Math.floor((post.rating*numRating+rating)/(numRating+1))
+    setNumRating(numRating+1)
+    setPost({
+      ...post,
+      rating:newRating
+    })
   };
 
   const handleCommentSubmit = () => {

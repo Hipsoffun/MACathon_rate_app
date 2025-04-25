@@ -27,11 +27,11 @@ function HomeScreen({ navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <PostItem post={{ title: 'post 1' }} />
-        <PostItem post={{ title: 'post 2' }} />
-        <PostItem post={{ title: 'post 3' }} />
-        <PostItem post={{ title: 'post 4' }} />
-        <PostItem post={{ title: 'post 5' }} />
+        <PostItem post={{ title: 'post 1', rating: 2 }} />
+        <PostItem post={{ title: 'post 2',rating: 4 }} />
+        <PostItem post={{ title: 'post 3',rating: 5 }} />
+        <PostItem post={{ title: 'post 4',rating: 1 }} />
+        <PostItem post={{ title: 'post 5',rating: 2 }} />
       </ScrollView>
 
       {/* Floating Plus Button */}
