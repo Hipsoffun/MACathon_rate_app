@@ -67,6 +67,8 @@ export default class PostService {
     //         throw new Error('Failed to create post');
     //     }
     // }
+
+    // new one with image
     static async createPost(title, rating, content, image) {
         try {
             const posts = await this.loadPosts();
