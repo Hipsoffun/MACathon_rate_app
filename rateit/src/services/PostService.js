@@ -46,7 +46,28 @@ export default class PostService {
         }
     }
 
-    static async createPost(title, rating,content) {
+    // static async createPost(title, rating,content) {
+    //     try {
+    //         const posts = await this.loadPosts();
+
+    //         const newPost = {
+    //             id: Date.now().toString(),
+    //             title: title.trim(),
+    //             rating: rating || 0,
+    //             content: content.trim(),
+    //             createdAt: new Date().toISOString(),
+    //         };
+
+    //         const updatedPosts = [...posts, newPost];
+    //         await this.savePosts(updatedPosts);
+
+    //         return newPost;
+    //     } catch (error) {
+    //         console.error('Error creating post:', error);
+    //         throw new Error('Failed to create post');
+    //     }
+    // }
+    static async createPost(title, rating, content, image) {
         try {
             const posts = await this.loadPosts();
 
@@ -55,6 +76,7 @@ export default class PostService {
                 title: title.trim(),
                 rating: rating || 0,
                 content: content.trim(),
+                image: image || null,  // Store image URI if provided
                 createdAt: new Date().toISOString(),
             };
 
