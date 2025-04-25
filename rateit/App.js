@@ -15,6 +15,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import PostsScreen from './src/screens/PostsScreen';
 import PostItem from './src/components/PostItem';
 import PostItemScreen from './src/screens/PostItemScreen';
+import CameraScreen from './src/screens/CameraScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,7 +45,7 @@ function HomeScreen({ navigation }) {
       {/* Bottom Status Bar */}
       <View style={styles.bottomBar}>
         <TouchableOpacity>
-          <Icon name="camera" size={40} color="#aaa" />
+          <Icon name="camera" size={40} color="#aaa" onPress={() => navigation.navigate('Camera')} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -58,6 +59,7 @@ export default function App() {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Posts" component={PostsScreen} />
+        <Stack.Screen name="Camera" component={CameraScreen} />
         <Stack.Screen name="PostItemScreen" component={PostItemScreen} />
       </Stack.Navigator>
     </NavigationContainer>
