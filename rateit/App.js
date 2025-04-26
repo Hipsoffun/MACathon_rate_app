@@ -1,4 +1,6 @@
 import React from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   StyleSheet,
@@ -16,10 +18,51 @@ import PostItem from './src/components/PostItem';
 import PostItemScreen from './src/screens/PostItemScreen';
 import CameraScreen from './src/screens/CameraScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
+import PostService from './src/services/PostService';
+
+import mockData from './src/data/mock';
 
 const Stack = createNativeStackNavigator();
 
 function HomeScreen({ navigation }) {
+  const [posts, setPosts] = useState([]);
+  // const loadMockData = async () => {
+  //   // await PostService.deleteDatabase()
+
+  //   let loadedPosts = await PostService.loadPosts();
+
+  //   if (loadedPosts.length === 0) {
+  //     const mockTitles = ['FIT2004', 'GYG Monash', 'Woodside Toilets (2nd Floor)', 'LTB study area Ground Floor'];
+  //     for (let i = 0; i < mockTitles.length; i++) {
+  //       await PostService.createPost(mockTitles[i], Math.ceil(Math.random() * 5), '', null);
+  //     }
+  //     loadedPosts = await PostService.loadPosts();
+  //   }
+
+  //   setPosts(loadedPosts);
+  // };
+
+  const loadMockData = async () => {
+    await PostService.deleteDatabase();
+    let loadedPosts = await PostService.loadPosts();
+  
+    if (loadedPosts.length === 0) {
+      for (let item of mockData) {
+        await PostService.createMockPost(item.title, item.rating, item.content, item.comments);
+      }
+      loadedPosts = await PostService.loadPosts();
+    }
+  
+    setPosts(loadedPosts);
+  };
+
+  // Load when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      loadMockData();
+    }, [])
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -27,14 +70,11 @@ function HomeScreen({ navigation }) {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <PostItem post={{ title: 'post 1', rating: 2 }} />
-        <PostItem post={{ title: 'post 2', rating: 4 }} />
-        <PostItem post={{ title: 'post 3', rating: 5 }} />
-        <PostItem post={{ title: 'post 4', rating: 1 }} />
-        <PostItem post={{ title: 'post 5', rating: 2 }} />
+        {posts.map(post => (
+          <PostItem key={post.id} post={post} />
+        ))}
       </ScrollView>
 
-      {/* Floating Plus Button */}
       <TouchableOpacity
         style={styles.floatingButton}
         onPress={() => navigation.navigate('Posts')}
@@ -42,19 +82,15 @@ function HomeScreen({ navigation }) {
         <Icon name="add" size={30} color="#fff" />
       </TouchableOpacity>
 
-      {/* Bottom Navigation Bar */}
       <View style={styles.bottomBar}>
-        {/* Left - Profile */}
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Icon name="person" size={36} color="#555" />
         </TouchableOpacity>
 
-        {/* Center - Camera */}
         <TouchableOpacity onPress={() => navigation.navigate('Camera')}>
           <Icon name="photo-camera" size={36} color="#555" />
         </TouchableOpacity>
 
-        {/* Right - Empty space (for symmetry or future icon) */}
         <View style={{ width: 36 }} />
       </View>
     </SafeAreaView>

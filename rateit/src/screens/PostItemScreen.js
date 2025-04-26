@@ -1,4 +1,4 @@
-import React, { useState,useRef } from 'react';
+import React, { useState,useRef, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput,
   KeyboardAvoidingView,
   Platform, Image } from 'react-native';
@@ -6,6 +6,7 @@ import Comment from '../components/Comment';
 import StarRating from '../components/StarRating';
 import { AntDesign } from '@expo/vector-icons';
 import Post from '../components/Post';
+import PostService from '../services/PostService';
 
 const PostItemScreen = ({ route }) => {
   const [post,setPost] = useState(route.params.post);
@@ -14,41 +15,46 @@ const PostItemScreen = ({ route }) => {
   const [numRating, setNumRating] = useState(1);
   const scrollViewRef = useRef();
   const [commentText, setCommentText] = useState('');
-  const [comments, setComments] = useState([
-    { id: 1, text: "This is an awesome post!", author: "User123", rating: 3 },
-    { id: 2, text: "I totally agree with you.", author: "JaneDoe", rating: 4 },
-    { id: 3, text: "Thanks for sharing!", author: "CoolGuy42", rating: 5 }
-  ]);
+  // const [comments, setComments] = useState([
+  //   { id: 1, text: "This is an awesome post!", author: "User123", rating: 3 },
+  //   { id: 2, text: "I totally agree with you.", author: "JaneDoe", rating: 4 },
+  //   { id: 3, text: "Thanks for sharing!", author: "CoolGuy42", rating: 5 }
+  // ]);
+  const [comments, setComments] = useState([])
 
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setSubmitted(true);
-    
-    const newRating = Math.floor((post.rating*numRating+rating)/(numRating+1))
-    setNumRating(numRating+1)
-    setPost({
-      ...post,
-      rating:newRating
-    })
+  
+    const newRating = Math.floor((post.rating * numRating + rating) / (numRating + 1));
+    setNumRating(numRating + 1);
+  
+    const updatedPost = await PostService.updateRating(post.id, newRating);
+    setPost(updatedPost);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     if (commentText.trim()) {
       const newComment = {
         id: comments.length + 1,
         text: commentText.trim(),
-        author: "Current User"
+        author: "Current User",
+        rating: rating || 0
       };
+
+      await PostService.addCommentToPost(post.id, commentText, 'Current User')
 
       setComments([...comments, newComment]);
       setCommentText('');
-
-      // Scroll to the bottom to show the new comment
-      setTimeout(() => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-      }, 100);
     }
   };
+
+
+  useEffect(() => {
+    if (post.comments) {
+      setComments(post.comments)
+    }
+  }, [])
+
 
   return (
 

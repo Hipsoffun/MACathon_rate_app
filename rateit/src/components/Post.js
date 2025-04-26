@@ -3,8 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import StarRating from './StarRating';
 
 const Post = ({ post }) => {
-  const randomViews = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
-
+  
   return (
     <View style={styles.postItem}>
       <Text style={styles.postTitle}>{post.title}</Text>
@@ -15,7 +14,7 @@ const Post = ({ post }) => {
 
       <Text style={styles.postContent}>{post.content}</Text>
 
-      <Text style={styles.postViews}>{randomViews} views</Text>
+      <Text style={styles.postViews}>{post.views} views</Text>
 
       <Text style={styles.postDate}>
         {new Date(post.createdAt).toLocaleString()}

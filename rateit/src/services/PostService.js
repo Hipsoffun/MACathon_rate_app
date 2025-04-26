@@ -46,32 +46,11 @@ export default class PostService {
         }
     }
 
-    // static async createPost(title, rating,content) {
-    //     try {
-    //         const posts = await this.loadPosts();
-
-    //         const newPost = {
-    //             id: Date.now().toString(),
-    //             title: title.trim(),
-    //             rating: rating || 0,
-    //             content: content.trim(),
-    //             createdAt: new Date().toISOString(),
-    //         };
-
-    //         const updatedPosts = [...posts, newPost];
-    //         await this.savePosts(updatedPosts);
-
-    //         return newPost;
-    //     } catch (error) {
-    //         console.error('Error creating post:', error);
-    //         throw new Error('Failed to create post');
-    //     }
-    // }
-
     // new one with image
     static async createPost(title, rating, content, image) {
         try {
             const posts = await this.loadPosts();
+            const randomViews = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
 
             const newPost = {
                 id: Date.now().toString(),
@@ -79,8 +58,9 @@ export default class PostService {
                 rating: rating || 0,
                 content: content.trim(),
                 image: image || null,  // Store image URI if provided
-                views: 0,
+                views: randomViews,
                 createdAt: new Date().toISOString(),
+                comments: [],
             };
 
             const updatedPosts = [...posts, newPost];
@@ -93,6 +73,31 @@ export default class PostService {
         }
     }
 
+    static async createMockPost(title, rating, content, comments) {
+        try {
+            const posts = await this.loadPosts();
+            const randomViews = Math.floor(Math.random() * (1000 - 100 + 1)) + 100;
+
+            const newPost = {
+                id: Date.now().toString(),
+                title: title,
+                rating: rating || 0,
+                content: content,
+                image: null,  // Store image URI if provided
+                views: randomViews,
+                createdAt: new Date().toISOString(),
+                comments: comments,
+            };
+
+            const updatedPosts = [...posts, newPost];
+            await this.savePosts(updatedPosts);
+
+            return newPost;
+        } catch (error) {
+            console.error('Error creating post:', error);
+            throw new Error('Failed to create post');
+        }
+    }
 
     static async migrateData() {
         try {
@@ -113,5 +118,51 @@ export default class PostService {
         } catch (error) {
           console.error('Data migration failed:', error);
         }
-      }
+    }
+
+    static async addCommentToPost(postId, comment, author) {
+        try {
+            const posts = await this.loadPosts();
+    
+            const updatedPosts = posts.map(post => {
+                if (post.id === postId) {
+                    const updatedComments = [...(post.comments || []), {
+                        id: Date.now().toString(),
+                        text: comment.trim(),
+                        author: author,
+                        createdAt: new Date().toISOString(),
+                    }];
+                    return { ...post, comments: updatedComments };
+                }
+                return post;
+            });
+    
+            await this.savePosts(updatedPosts);
+    
+            return updatedPosts.find(post => post.id === postId);
+        } catch (error) {
+            console.error('Error adding comment:', error);
+            throw new Error('Failed to add comment');
+        }
+    }   
+    
+    static async updateRating(postId, newRating) {
+        try {
+            const posts = await this.loadPosts();
+    
+            const updatedPosts = posts.map(post => {
+                if (post.id === postId) {
+                    return { ...post, rating: newRating };
+                }
+                return post;
+            });
+    
+            await this.savePosts(updatedPosts);
+    
+            return updatedPosts.find(post => post.id === postId);
+        } catch (error) {
+            console.error('Error updating rating:', error);
+            throw new Error('Failed to update rating');
+        }
+    }
 }
