@@ -5,6 +5,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput,
 import Comment from '../components/Comment';
 import StarRating from '../components/StarRating';
 import { AntDesign } from '@expo/vector-icons';
+import Post from '../components/Post';
 
 const PostItemScreen = ({ route }) => {
   const [post,setPost] = useState(route.params.post);
@@ -56,18 +57,7 @@ const PostItemScreen = ({ route }) => {
       style={styles.keyboardAvoidingView}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.postBox}>
-          <Text style={styles.title}>{post.title}</Text>
-          <Text style={styles.content}>{post.content}</Text>
-          <StarRating rating={post.rating} />
-          <Text style={styles.date}>
-            {new Date(post.createdAt).toLocaleString()}
-          </Text>
-          
-          {post.image && (
-            <Image source={{ uri: post.image }} style={styles.postImage} />
-          )}
-        </View>
+        <Post post={post}></Post>
 
         {!submitted ? (
           <View style={styles.ratingSection}>
@@ -236,13 +226,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  postImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginVertical: 16,
-    resizeMode: 'cover',
   },
 });
 

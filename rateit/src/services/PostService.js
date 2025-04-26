@@ -79,6 +79,7 @@ export default class PostService {
                 rating: rating || 0,
                 content: content.trim(),
                 image: image || null,  // Store image URI if provided
+                views: 0,
                 createdAt: new Date().toISOString(),
             };
 
