@@ -43,7 +43,7 @@ function HomeScreen({ navigation }) {
   // };
 
   const loadMockData = async () => {
-    await PostService.deleteDatabase();
+    // await PostService.deleteDatabase();
     let loadedPosts = await PostService.loadPosts();
   
     if (loadedPosts.length === 0) {
