@@ -66,7 +66,7 @@ function HomeScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Category</Text>
+        <Text style={styles.title}>Ratings</Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
